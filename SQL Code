@@ -1,0 +1,26 @@
+#How many products have the year_added value missing
+SELECT COUNT(*) AS missing_year 
+FROM products
+WHERE year_added IS NULL
+
+#Query to ensure the product data matches the description
+SELECT product_id,
+       product_type,
+	   CASE WHEN brand = '-' THEN 'Unknown' ELSE brand END,
+	   TRIM	(' grams' FROM weight) AS weight,
+	   ROUND(CAST(price AS NUMERIC), 2) AS price,
+	   average_units_sold,
+	   CASE WHEN year_added IS NULL THEN '2022' ELSE year_added END,
+	   UPPER(stock_location) AS stock_location
+FROM products	 
+
+#How the range varies for each product type
+SELECT product_type,
+       MIN(price) AS min_price,
+	   MAX(price) AS max_price
+FROM products
+GROUP BY product_type
+
+#More detail at meat and dairy products where the average units sold was greater than ten
+SELECT product_id, price, average_units_sold FROM products
+WHERE product_type IN ('Meat', 'Dairy') AND average_units_sold > 10
